@@ -1,12 +1,18 @@
 from django.shortcuts import render 
 from django.http import JsonResponse 
-import openai 
+from openai import OpenAI
+import os
 
-openai.api_key = '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'
+
+api_key = os.environ.get('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')
+if api_key is None:
+    raise ValueError("API key is not set in the environment variables.")
+
+client = OpenAI(api_key=api_key)
 
 def get_completion(prompt): 
 	print(prompt) 
-	query = openai.Completion.create( 
+	query = OpenAI().Completion.create( 
 		engine="text-davinci-003", 
 		prompt=prompt, 
 		max_tokens=1024, 
