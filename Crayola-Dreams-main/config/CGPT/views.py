@@ -4,7 +4,7 @@ from openai import OpenAI
 import os
 
 
-api_key = os.environ.get('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')
+api_key = os.environ.get('sk--50')
 if api_key is None:
     raise ValueError("API key is not set in the environment variables.")
 
