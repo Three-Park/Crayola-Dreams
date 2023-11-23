@@ -14,8 +14,8 @@ from PIL import Image
 from stability_sdk import client
 import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
 
-openai.api_key='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'
-os.environ['STABILITY_KEY'] = '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'
+openai.api_key='sk-Dy'
+os.environ['STABILITY_KEY'] = 'sk-Dy'
 
 os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
 
