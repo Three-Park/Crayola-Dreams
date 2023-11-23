@@ -4,7 +4,7 @@ from typing_extensions import Text
 import openai
 import os
 
-openai.api_key='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'
+openai.api_key='sk-Dy'
 
 
 
