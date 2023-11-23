@@ -1,0 +1,14 @@
+{% extends 'base_diary.html' %}
+
+{% block content %}
+  <h2>Your Diaries</h2>
+  <ul>
+    {% for diary in diaries %}
+      <li>
+        <a href="{% url 'view_diary' pk=diary.pk %}">{{ diary.title }}</a>
+        ({{ diary.registered_date|date:"F j, Y" }})
+      </li>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'create_diary' %}">Create a new diary</a>
+{% endblock %}

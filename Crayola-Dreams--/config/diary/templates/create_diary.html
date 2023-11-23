@@ -1,0 +1,36 @@
+{% extends 'base_diary.html' %}
+
+{% block content %}
+  <h2>Create a New Diary</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="{{ form.title.id_for_label }}">Title:</label>
+    {{ form.title }}
+    <br>
+    <label for="{{ form.content.id_for_label }}">Content:</label>
+    {{ form.content }}
+    <br>    
+    <label for="{{ form.img_url.id_for_label }}">Image:</label>
+    {{ form.img_url }}
+    <br>
+    <img src="{{ form.img_url.value.url }}" alt="Diary Image" id="preview-image" style="display: none;">
+    <br>
+    <button type="button" onclick="submitForm()">Save</button>
+  </form>
+  <script>
+    function submitForm() {
+      // 이미지 URL 가져오기
+      var imgElement = document.querySelector('input[name="img_url"]');
+      var imgUrl = imgElement.value;
+
+      if (imgUrl) {
+        // 이미지 URL이 있는 경우 이미지를 표시하도록 변경
+        document.getElementById('image-preview').style.display = 'block';
+        document.getElementById('preview-image').src = imgUrl;
+      }
+
+      document.getElementById('diary-form').submit();
+    }
+  </script>
+  <a href="{% url 'diary_list' %}">Cancel</a>
+{% endblock %}
