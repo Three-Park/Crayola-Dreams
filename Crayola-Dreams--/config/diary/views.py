@@ -14,9 +14,8 @@ from PIL import Image
 from stability_sdk import client
 import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
 
-openai.api_key='sk-Dy'
-os.environ['STABILITY_KEY'] = 'sk-Dy'
-
+openai.api_key='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'
+os.environ['STABILITY_KEY'] = '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'
 os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
 
 def get_completion(final):  
@@ -33,7 +32,7 @@ def get_completion(final):
 	response = query.choices[0].message["content"]
 	response=response.split('\n')
 	prompts = [v for v in response if v]
-	return response
+	return prompts
 
 
 def query_view(request): 
@@ -79,7 +78,8 @@ a portrait of a laughing, toxic, muscle, god, elder, (hdr:1.28), bald, hyperdeta
 My query may be in other languages. In that case, Your answer is exclusively in English (IMPORTANT!!!), since the model only understands English.
 Also, you should not copy my request directly in your response, you should compose a new one, observing the format given in the examples. Finally, give three prompts always. Insert two empty lines after the end of each prompt.
 Don't add your comments. you must answer right away.
-my query is : '''
+my query is : 
+'''
 		combined_text=f"{predefined_text}+{wdiary}"
 		response = get_completion(combined_text)
 		return JsonResponse({'response': response})
@@ -94,7 +94,6 @@ stability_api = client.StabilityInference(
 )
 
 def Image_out(request):
-    img_url = None
     if request.method == 'POST':
         form = DiaryForm(request.POST, request.FILES)
         if form.is_valid():
@@ -136,6 +135,19 @@ def Image_out(request):
 
 
     return render(request, 'create_diary.html', {'form': form, 'img_url': img_url})
+
+
+def django_view(request):
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        # query_view 및 Image_out 함수 호출
+        response = query_view(content)  # query_view 함수
+        img_url = Image_out(response)  # Image_out 함수
+
+        return JsonResponse({'img_url': img_url})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+
 
 
 @login_required
