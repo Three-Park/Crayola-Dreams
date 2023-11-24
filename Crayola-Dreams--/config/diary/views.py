@@ -143,7 +143,6 @@ def django_view(request):
         # query_view 및 Image_out 함수 호출
         response = query_view(content)  # query_view 함수
         img_url = Image_out(response)  # Image_out 함수
-
         return JsonResponse({'img_url': img_url})
     else:
         return JsonResponse({'error': 'Invalid request method'})
