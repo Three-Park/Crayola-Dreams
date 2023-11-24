@@ -19,34 +19,17 @@
   </form>
   <script>
     function submitForm() {
-      // 프롬프트 가져오기
-      var contentElement = document.querySelector('textarea[name="content"]');
-      var content = contentElement.value;
+      // 이미지 URL 가져오기
+      var imgElement = document.querySelector('input[name="img_url"]');
+      var imgUrl = imgElement.value;
 
-      // Django 뷰로 전송
-      $.ajax({
-        url: '{% url "django_view" %}',
-        type: 'POST',
-        data: { content: content },
-        dataType: 'json',
-        success: function(data) {
-          // 성공 시 결과 표시
-          var imgUrl = data.img_url;  // 이 부분은 실제 서버 응답에 따라 수정해야 함
+      if (imgUrl) {
+        // 이미지 URL이 있는 경우 이미지를 표시하도록 변경
+        document.getElementById('image-preview').style.display = 'block';
+        document.getElementById('preview-image').src = imgUrl;
+      }
 
-          if (imgUrl) {
-            // 이미지 URL이 있는 경우 이미지를 표시
-            document.getElementById('image-preview').style.display = 'block';
-            document.getElementById('preview-image').src = imgUrl;
-          }
-
-          // 폼 제출
-          document.getElementById('diary-form').submit();
-        },
-        error: function() {
-          // 실패 시 처리
-          alert('An error occurred');
-        }
-      });
+      document.getElementById('diary-form').submit();
     }
   </script>
 
