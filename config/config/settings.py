@@ -11,11 +11,15 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 #템플릿 디렉토리 경로 설정
 TEMPLATES_DIR = BASE_DIR/"templates"
+#media경로 설정
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -34,8 +38,7 @@ AUTH_USER_MODEL = 'users.User'
 INSTALLED_APPS = [
     'users',
     'diary',
-    'aimodel',
-
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

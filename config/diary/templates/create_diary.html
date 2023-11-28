@@ -10,30 +10,11 @@
     <label for="{{ form.content.id_for_label }}">Content:</label>
     {{ form.content }}
     <br>
-    
-    {% if form.image_url.value %}
-      <!-- 이미지가 있는 경우 -->
-      <img src="{{ form.image_url.value }}" alt="Selected Image" style="display: block;">
-      <br>
-    {% else %}
-      <!-- 이미지가 없는 경우 -->
-      <label for="{{ form.image_url.id_for_label }}">Image:</label>
-      {{ form.image_url }}
-      <br>
-    {% endif %}
 
-
-    <button type="submit">Save</button>
+    <button type="submit" name="save_diary">Save</button>
   </form>
 
-
-
-  {% if not form.image_url.value %}
-    <!-- 이미지가 없는 경우에만 이미지 선택 화면으로 넘어가는 링크를 표시 -->
-    <a href="{% url 'image_select_page' %}">Select an Image</a>
+  {% if form.instance.id %}
+    <a href="{% url 'image_select' pk=form.instance.id %}">Select an Image</a>
   {% endif %}
-
-
-
-  <a href="{% url 'diary_list' %}">Cancel</a>
 {% endblock %}
