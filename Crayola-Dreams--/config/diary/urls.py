@@ -9,5 +9,4 @@ urlpatterns = [
     path('view/<int:pk>/', view_diary, name='view_diary'),
     path('edit/<int:pk>/', edit_diary, name='edit_diary'),
     path('delete/<int:pk>/', delete_diary, name='delete_diary'),
-    path('django_view/', django_view, name='django_view'),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

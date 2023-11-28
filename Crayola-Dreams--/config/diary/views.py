@@ -131,10 +131,10 @@ def Image_out(request):
                         img.save(image_path)
 
                         # 이미지 URL 설정 (MEDIA_URL 사용)
-                        img_url = os.path.join(settings.MEDIA_URL, 'generated_images', 'image.png')  # settings.MEDIA_URL과 조합하여 이미지 URL 생성
+                        image_url = os.path.join(settings.MEDIA_URL, 'generated_images', 'image.png')  # settings.MEDIA_URL과 조합하여 이미지 URL 생성
 
 
-    return render(request, 'create_diary.html', {'form': form, 'img_url': img_url})
+    return render(request, 'create_diary.html', {'form': form, 'image_url': image_url})
 
 
 def django_view(request):
@@ -142,8 +142,8 @@ def django_view(request):
         content = request.POST.get('content')
         # query_view 및 Image_out 함수 호출
         response = query_view(content)  # query_view 함수
-        img_url = Image_out(response)  # Image_out 함수
-        return JsonResponse({'img_url': img_url})
+        image_url = Image_out(response)  # Image_out 함수
+        return JsonResponse({'image_url': image_url})
     else:
         return JsonResponse({'error': 'Invalid request method'})
 
