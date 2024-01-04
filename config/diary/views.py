@@ -3,16 +3,6 @@ from .models import Diary
 from .forms import DiaryForm
 from django.contrib.auth.decorators import login_required
 
-from stability_sdk import client
-import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
-import openai
-from IPython.display import display
-from PIL import Image
-import os
-import io
-import uuid
-
-
 import logging
 
 logger = logging.getLogger(__name__)
@@ -67,6 +57,15 @@ def delete_diary(request, pk):
         return redirect('diary_list') 
     return render(request, 'delete_diary.html', {'diary': diary})
 
+"""
+from stability_sdk import client
+import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
+import openai
+from IPython.display import display
+from PIL import Image
+import os
+import io
+import uuid
 
 @login_required
 def image_select(request, pk):
@@ -92,10 +91,8 @@ def image_select(request, pk):
         form = DiaryForm(instance=diary)
 
     return render(request, 'image_select.html', {'diary': diary})
-#
-#
-#
-"""
+
+
 def generate_image_url(content):
     stability_api = client.StabilityInference(
         key='grpc.stability.ai:443', 

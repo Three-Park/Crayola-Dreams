@@ -38,6 +38,8 @@ AUTH_USER_MODEL = 'users.User'
 INSTALLED_APPS = [
     'users',
     'diary',
+    'comment',
+    
     
     'django.contrib.admin',
     'django.contrib.auth',
