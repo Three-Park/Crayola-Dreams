@@ -12,6 +12,11 @@ import os
 import io
 import uuid
 
+
+import logging
+
+logger = logging.getLogger(__name__)
+
 @login_required
 def create_diary(request):
     if request.method == 'POST':
@@ -67,26 +72,60 @@ def delete_diary(request, pk):
 def image_select(request, pk):
     user = request.user
     diary = get_object_or_404(Diary, pk=pk, user=user)
-
+    form =  DiaryForm(request.POST, instance=diary)
     if request.method == 'POST':
-        form = DiaryForm(request.POST, instance=diary)
         if form.is_valid():
+            logger.info("Form is valid")
+            
             diary_content = form.cleaned_data['content']
+            logger.info(diary_content)
+            
             generated_image_url = generate_image_url(diary_content)
+            logger.info(f"Generated Image URL: {generated_image_url}")
+            
             diary.image_url = generated_image_url
             diary.save()
 
             return redirect('view_diary')
     else:
+        logger.error(f"Form is invalid. Errors: {form.errors}")
         form = DiaryForm(instance=diary)
 
     return render(request, 'image_select.html', {'diary': diary})
 #
 #
 #
-#
+"""
 def generate_image_url(content):
-    generated_image = generate_image(content)
+    stability_api = client.StabilityInference(
+        key='grpc.stability.ai:443', 
+        verbose=False, 
+        engine="stable-diffusion-xl-1024-v1-0"
+    )
+        
+    prompt = generate_prompt(content)    
+    print(prompt)
+    answers = stability_api.generate(
+        prompt = prompt,
+        style_preset ="anime", 
+        seed=4253978046,
+        steps=50, 
+        cfg_scale=8.0,
+        width=1024, 
+        height=1024, 
+        samples=3,
+        sampler=generation.SAMPLER_K_DPMPP_2M, 
+    )
+    
+    for resp in answers:
+        for artifact in resp.artifacts:
+            if artifact.type == generation.ARTIFACT_IMAGE:
+                img = Image.open(io.BytesIO(artifact.binary))
+    if img is None:
+        # Handle the case where no valid image is found
+        raise ValueError("No valid image found in the response artifacts.")   
+             
+    generated_image = img
     filename = f'{uuid.uuid4()}.png'
     image_path = os.path.join(settings.MEDIA_ROOT, 'generated_images', filename)
     generated_image.save(image_path)
@@ -119,7 +158,6 @@ def generate_image(content):
         for artifact in resp.artifacts:
             if artifact.type == generation.ARTIFACT_IMAGE:
                 img = Image.open(io.BytesIO(artifact.binary))
-                display(img)
     return img
 
 def generate_prompt(content):
@@ -166,12 +204,13 @@ def generate_prompt(content):
         my query is : 
         '''
     combined_text=f"{predefined_text}+{content}"
+    logger.info(f"TEXT: {combined_text}")
     completed_prompt = get_completion(combined_text)
     return completed_prompt
 
 
 def get_completion(combined_text):
-    openai.api_key = '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'
+    openai.api_key = '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'
     query = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
 		messages=[
@@ -185,4 +224,6 @@ def get_completion(combined_text):
     output_text = query["choices"][0]["message"]["content"]
     output_text = output_text.split('\n')
     prompts = [v for v in output_text if v]
+    logger.info(f"TEXT: {prompts}")
     return prompts
+"""
