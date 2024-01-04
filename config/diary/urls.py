@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import create_diary, diary_list, view_diary, edit_diary, delete_diary, image_select
+from .views import create_diary, diary_list, view_diary, edit_diary, delete_diary
 
 urlpatterns = [
     path('create/', create_diary, name='create_diary'),
@@ -7,5 +7,4 @@ urlpatterns = [
     path('view/<int:pk>/', view_diary, name='view_diary'),
     path('edit/<int:pk>/', edit_diary, name='edit_diary'),
     path('delete/<int:pk>/', delete_diary, name='delete_diary'),
-    path('imageselect/<int:pk>/',image_select,name='image_select'),
 ]

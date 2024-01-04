@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generated Comments</title>
+    <title>Generated Comment</title>
 </head>
 <body>
-    <h1>Generated Comments for Diary {{ diary.id }}</h1>
-    <ul>
-        {% for description in descriptions %}
-            <li>{{ description }}</li>
-        {% endfor %}
-    </ul>
+    <h1>Diary Content</h1>
+    <p>{{ diary_content|linebreaks }}</p>
+
+    <h2>Generated Comment</h2>
+    <p>{{ descriptions|linebreaks }}</p>
 </body>
 </html>
+</html> 
