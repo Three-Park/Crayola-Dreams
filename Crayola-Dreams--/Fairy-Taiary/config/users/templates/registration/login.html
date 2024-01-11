@@ -1,0 +1,11 @@
+{% extends 'base_registration.html' %}
+
+{% block content %}
+  <h2>로그인</h2>
+  <form method="post" class="post-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">로그인</button>
+  </form>
+  <a href="{% url 'register' %}">계정이 없으신가요? 회원가입</a>
+{% endblock %}

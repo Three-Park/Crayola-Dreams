@@ -1,0 +1,13 @@
+{% extends 'base_diary.html' %}
+
+{% block content %}
+  <h2>Generated Image</h2>
+
+  {% if diary.image_url %}
+    <img src="{{ diary.image_url.url }}" alt="Generated Image">
+  {% else %}
+    <p>Error: Failed to generate image.</p>
+  {% endif %}
+
+  <a href="{% url 'view_diary' pk=diary.id %}">Back to Diary</a>
+{% endblock %}

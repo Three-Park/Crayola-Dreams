@@ -1,0 +1,14 @@
+{% extends 'base_diary.html' %}
+
+{% block content %}
+  <h2>{{ diary.title }}</h2>
+  <p>{{ diary.content|linebreaks }}</p>
+  {% if diary.image_url %}
+    <img src="{{ diary.image_url.url }}" alt="{{ diary.title }}">
+  {% endif %}
+  <p>Registered on: {{ diary.registered_date|date:"F j, Y" }}</p>
+  <p>Last updated on: {{ diary.last_update_date|date:"F j, Y" }}</p>
+  <a href= "{% url 'edit_diary' pk=diary.pk %}"> Edit</a>
+  <a href= "{% url 'delete_diary' pk=diary.pk %}"> Delete</a>
+  <a href="{% url 'diary_list' %}">Back to diaries</a>
+{% endblock %}
