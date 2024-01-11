@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from .views import main_page_view
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', main_page_view, name='main_page'),
@@ -24,4 +26,6 @@ urlpatterns = [
     path('diary/', include('diary.urls')),
     path('users/', include('users.urls')),
     path('comment/', include('comment.urls')),
+    path('genimg/', include('genimg.urls')),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

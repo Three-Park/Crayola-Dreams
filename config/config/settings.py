@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'users',
     'diary',
     'comment',
+    'genimg',
     
     
     'django.contrib.admin',

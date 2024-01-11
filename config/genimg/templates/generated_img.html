@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generated Image</title>
+</head>
+<body>
+    <h1>Generated Image</h1>
+    
+    {% if generated_image %}
+        <img src="{{ generated_image.url }}" alt="Generated Image">
+    {% else %}
+        <p>No image available.</p>
+    {% endif %}
+</body>
+</html>
