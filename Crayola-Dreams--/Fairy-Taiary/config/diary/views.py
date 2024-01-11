@@ -223,7 +223,7 @@ def generate_prompt(content):
 
 
 def get_completion(combined_text):
-    openai.api_key = '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'
+    openai.api_key = 'sk-D'
     query = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
 		messages=[
