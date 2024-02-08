@@ -1,5 +1,5 @@
 """
-URL configuration for config project.
+URL configuration for fairy_tairy project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -15,13 +15,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
-from .views import main_page_view
+from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
+
+
 
 urlpatterns = [
-    path('', main_page_view, name='main_page'),
-    path('admin/', admin.site.urls),
-    path('diary/', include('diary.urls')),
+    path('diaries/', include('diaries.urls')),
+    path('emochat/', include('emochat.urls')),
+    path('images/', include('images.urls')),
+    path('books/', include('books.urls')),
+    path('recommend_music/', include('recommend_music.urls')),
     path('users/', include('users.urls')),
-   
+    
+    path('admin/', admin.site.urls),
+    
+    path('dj-rest-auth/', include('dj_rest_auth.urls')),  
+    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls'))
 ]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) 
