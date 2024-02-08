@@ -1,0 +1,11 @@
+### Usage
+
+위에 initial setting 4번쨰까지만 실행시키고(wandb 전까지)
+
+inference부분 실행!
+
+파인 튜닝 모델 경로는 자기 로컬 경로로 변경
+
+모델 파일 : 
+
+https://drive.google.com/drive/folders/18mZMedlQwxgEj6TpGQ0GzYeRl1WHbSdY?usp=drive_link
