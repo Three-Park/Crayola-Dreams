@@ -50,20 +50,43 @@ INSTALLED_APPS = [
     #DRF
     'rest_framework',
     
-    #DRF RokenAuthentication
+    #DRF Authentication
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    'django.contrib.sites',
+    
+    #Django Allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     
     #s3
     'storages',
 ]
 
-# REST framework 설정
 
+#Site설정
+SITE_ID = 1
+
+#dj-rest-auth
+USE_JWT = True
+ACCOUNT_USERNAME_REQUIRED = True
+JWT_AUTH_COOKIE = 'my-app-auth'
+JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
+OLD_PASSWORD_FIELD_ENABLED = True
+LOGOUT_ON_PASSWORD_CHANGE = False 
+
+# 회원가입 과정에서 이메일 인증 사용 X
+ACCOUNT_EMAIL_VERIFICATION = 'none' 
+
+
+# REST framework 설정
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+        "rest_framework.authentication.SessionAuthentication",
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -71,15 +94,21 @@ REST_FRAMEWORK = {
     
 }
 
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'my-app-auth',
+    
+    # want refresh token
+    'JWT_AUTH_REFRESH_COOKIE': 'my-refresh-token',
+    # set refresh token http only (security essue)
+    'JWT_AUTH_HTTPONLY': False,
+    # JWT 쿠키 csrf 검사
+    'JWT_AUTH_COOKIE_USE_CSRF' : True,
+    # set Session login false : if true, sessionid remains in cookie info
+    'SESSION_LOGIN' : False
+}
 
 JWT_AUTH = {
-    #JWT의 비밀키 (secret key)로 어떤 걸 사용할지
-    'JWT_SECRET_KEY': SECRET_KEY,
-
-    #JWT 암호화에 사용되는 알고리즘 지정
-    'JWT_ALGORITHM': 'HS256',
-
-    #JWT 토큰을 갱신 가능한지에 대한 여부
     'JWT_ALLOW_REFRESH': True,
     # JWT 토큰의 유효기간 설정
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
@@ -91,6 +120,7 @@ JWT_AUTH = {
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
     'rest_framework.authentication.BasicAuthentication',
     'rest_framework.authentication.TokenAuthentication',
 ]
@@ -105,7 +135,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'fairy_tairy.urls'
