@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'books',
     'recommend_music',
     'users',
+    'core',
     
     #default
     'django.contrib.admin',
@@ -112,7 +113,6 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
     # JWT 토큰의 유효기간 설정
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
-
     # JWT 토큰 갱신의 유효기간
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),
 }
