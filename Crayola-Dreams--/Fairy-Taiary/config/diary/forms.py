@@ -8,3 +8,7 @@ class DiaryForm(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'cols': 80, 'rows': 20,'style': 'resize: vertical;'}),
         }
+        required = {
+            'title': True,
+            'content': True,
+        }

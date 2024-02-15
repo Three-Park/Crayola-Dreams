@@ -4,7 +4,7 @@
   <h2>Generated Image</h2>
 
   {% if diary.image_url %}
-    <img src="{{ diary.image_url }}" alt="Generated Image">
+    <img src="{{ diary.image_url.url }}" alt="Generated Image">
   {% else %}
     <p>Error: Failed to generate image.</p>
   {% endif %}

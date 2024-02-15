@@ -3,7 +3,7 @@
 {% block content %}
   <h2>{{ diary.title }}</h2>
   <p>{{ diary.content|linebreaks }}</p>
-  {% if diary.img_url %}
+  {% if diary.image_url %}
     <img src="{{ diary.image_url.url }}" alt="{{ diary.title }}">
   {% endif %}
   <p>Registered on: {{ diary.registered_date|date:"F j, Y" }}</p>
