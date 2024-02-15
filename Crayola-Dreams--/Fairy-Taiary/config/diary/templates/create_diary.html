@@ -9,12 +9,28 @@
     <br>
     <label for="{{ form.content.id_for_label }}">Content:</label>
     {{ form.content }}
+    <br>    
+    <button type="submit">Save</button>
     <br>
-
-    <button type="submit" name="save_diary">Save</button>
+    <div>
+      <h2>Image Preview</h2>
+      <img id="preview-image" alt="Preview Image" style="display: none;">
+    </div>
+    
+    <button type="button" onclick="showImage()">Show Image</button>
+    
+    <script>
+    function showImage() {
+      var imgUrl = "{{ image_url }}";  // Django에서 전달한 이미지 URL을 가져옵니다.
+    
+      if (imgUrl) {
+        // 이미지 URL이 있는 경우 이미지를 표시
+        document.getElementById('preview-image').src = imgUrl;
+        document.getElementById('preview-image').style.display = 'block';
+      }
+    }
+    </script>
   </form>
 
-  {% if form.instance.id %}
-    <a href="{% url 'image_select' pk=form.instance.id %}">Select an Image</a>
-  {% endif %}
+  <a href="{% url 'diary_list' %}">Cancel</a>
 {% endblock %}
