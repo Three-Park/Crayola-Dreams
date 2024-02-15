@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from .serializers import DiarySerializer
+from rest_framework import generics, status
+from rest_framework.generics import ListAPIView
+from .serializers import *
 from .models import Diary
 from .forms import DiaryForm
 from django.contrib.auth.decorators import login_required
@@ -22,23 +23,9 @@ import io
 import uuid
 from django.conf import settings
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import generics, status
-from rest_framework.generics import ListAPIView
-from .serializers import *
-
-
 import logging
 
 logger = logging.getLogger(__name__)
-
-
-from rest_framework.response import Response
-from rest_framework import generics, status
-from rest_framework.generics import ListAPIView
-from .serializers import *
-
 
 class DiaryCreate(generics.CreateAPIView):
     serializer_class = DiarySerializer
