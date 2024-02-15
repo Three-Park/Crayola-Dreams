@@ -37,7 +37,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'diaries',
-    'emochat',
+    'emotion_chat',
     'images',
     'books',
     'recommend_music',
