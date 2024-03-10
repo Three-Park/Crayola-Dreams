@@ -8,10 +8,10 @@ import openai
 
 model_path='Eunju2834/LoRA_oilcanvas_style' #FineTuning Model Path
 pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
-pipe.unet.load_attn_procs(model_path)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+pipe.unet.load_attn_procs(model_path)
 pipe.to(device)
-
+print(device)
 
 neg_prompt='''FastNegativeV2,(bad-artist:1.0), (loli:1.2),
     (worst quality, low quality:1.4), (bad_prompt_version2:0.8),
@@ -27,7 +27,6 @@ neg_prompt='''FastNegativeV2,(bad-artist:1.0), (loli:1.2),
 
 def get_image(prompt):
     image = pipe(prompt, negative_prompt=neg_prompt,num_inference_steps=30, guidance_scale=7.5).images[0]
-    image.save(r"C:\Users\USER\Desktop\GitHubCode\Fairy-Taiary\fairy_tairy\ai\testimg")
     return image
 
 
