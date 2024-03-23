@@ -1,61 +1,86 @@
-from django.shortcuts import render
-from rest_framework import mixins, generics
-from rest_framework.generics import get_object_or_404, ListAPIView
-from rest_framework.viewsets import GenericViewSet
+from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework.response import Response
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics, status, mixins, viewsets
+from .serializers import BookSerializer,BookCoverSerializer,PageSerializer
+from diary.serializers import DiarySerializer
+from .models import Book,Page,Diary
+from .forms import BookForm,PageForm
+from django.contrib.auth.decorators import login_required
 
-from .serializers import *
-from config.config.permissions import IsOwner
+from django.http import HttpResponse
+from typing_extensions import Text
 
-class BookList(ListAPIView):
+import io
+import os
+from django.conf import settings
+
+
+class BookList(mixins.ListModelMixin,
+                mixins.CreateModelMixin,
+                generics.GenericAPIView):
     queryset=Book.objects.all()
-    print(queryset)
     serializer_class = BookCoverSerializer
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-
-class BookDetail(generics.RetrieveAPIView):
-    serializer_class = BookSerializer
-
-    def retrieve(self, request, pk):
-        model=Book.objects.get(pk=pk)
-        serializer=self.get_serializer(model)
-        return Response(serializer.data)
-
-
-class DiaryToBook(generics.UpdateAPIView):
-    serializer_class = BookSerializer
-    queryset = Book.objects.all()
-
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
-
-    def update(self, request, *args, **kwargs):
-        book = self.get_object()
-        diary_ids = request.data.get('diaries', [])  # assuming that diaries are passed as a list of ids
-        book.diaries.set(diary_ids)
-        serializer = self.get_serializer(book)
-        return Response(serializer.data)
+    def get(self, request, *args, **kwargs):
+        return self.list(request,*args,**kwargs)
     
 
 
-class BookViewSet(GenericViewSet,
-                  mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin):
+
+class BookView(mixins.ListModelMixin,
+               mixins.RetrieveModelMixin,
+               mixins.UpdateModelMixin,
+               mixins.DestroyModelMixin,
+               generics.GenericAPIView):
+    queryset=Page.objects.all()
+    serializer_class=PageSerializer
+
+    def get(self, request, book_id):
+        model=Page.objects.get(book_id)
+        serializer=PageSerializer(model)
+
+        pages=Page.objects.filter(book_id=book_id)
+        diaries=[page.diary_id for page in pages]
+        serializer=DiarySerializer(diaries,many=True)
+
+        return Response(serializer.data)
+
+#중간테이블 만들어서 하기
+#중간테이블 showup만 하면 될듯
+
     
-    permission_classes = [IsOwner, IsAuthenticated]
-    serializer_class = BookSerializer
-    queryset = Book.objects.all()
     
-    def filter_queryset(self,queryset):
-        queryset = queryset.filter(user = self.request.user)
-        return super().filter_queryset(queryset)
+class BookCreate(mixins.UpdateModelMixin,
+                 mixins.DestroyModelMixin,
+                 generics.GenericAPIView):
+    queryset=Diary.objects.all()
+    serializer_class = DiarySerializer
+ 
+    def post(self, request, *args, **kwargs):
+        queryset=Page.objects.all()
+        serializer_class=BookSerializer
+
+        diary_ids = request.data.get('diary_id', [])
+        book_title = request.data.get('title')
+        author = request.data.get('author')
+        description = request.data.get('description',' ')
+        
+        # 새로운 Book 객체 생성
+        book = Book.objects.create(
+            book_title=book_title,
+            author=author,
+            description=description,
+            user=request.user  # 현재 사용자
+        )
+        
+        # 선택한 다이어리들을 새로운 Book에 추가
+        for diary_id in diary_ids:
+            Page.objects.create(book_id=book.id, diary_id=diary_id)
+        
+        return Response({"message": "Book created successfully"}, status=status.HTTP_201_CREATED)
+
+
+
+    
+
+    

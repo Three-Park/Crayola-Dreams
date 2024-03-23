@@ -1,8 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import generics, status
-from rest_framework.generics import ListAPIView
+from rest_framework import generics, status, mixins
 from .serializers import *
 from .models import Diary
 from .forms import DiaryForm
@@ -18,77 +16,66 @@ import io
 import os
 from IPython.display import display
 from PIL import Image
-import os
-import io
 import uuid
 from django.conf import settings
 
 import logging
 
 logger = logging.getLogger(__name__)
+    
+    
 
-class DiaryCreate(generics.CreateAPIView):
+class DiaryList(mixins.ListModelMixin,
+                mixins.CreateModelMixin,
+                generics.GenericAPIView):
+    queryset=Diary.objects.all()
+    serializer_class = DiarySerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request,*args,**kwargs)
+    
+
+class DiaryCreate(mixins.CreateModelMixin,
+                  generics.GenericAPIView):
     serializer_class = DiarySerializer
 
     def post(self, request):
-        serializer = self.get_serializer(data=request.data)
+        serializer = DiarySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors)
-    
+        return Response(serializer.errors)   
 
-class DiaryList(ListAPIView):
+class DiaryView(mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin,
+                     mixins.DestroyModelMixin,
+                     generics.GenericAPIView):
     queryset=Diary.objects.all()
-    print(queryset)
-    serializer_class = DiarySerializer
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-    
-    
-class DiaryView(generics.RetrieveAPIView):
-    serializer_class = DiarySerializer
-
-    def retrieve(self, request, pk):
-        model=Diary.objects.get(pk=pk)
-        serializer=self.get_serializer(model)
-        return Response(serializer.data)
-    
-
-class DiaryEdit(generics.UpdateAPIView):
-    serializer_class = DiarySerializer
+    serializer_class=DiarySerializer
 
     def get(self, request, pk):
         model = Diary.objects.get(pk=pk)
         serializer = DiarySerializer(model)
         return Response(serializer.data)
-
-    def update(self,request,pk):
+    
+    def put(self,request,pk):
         model=Diary.objects.get(pk=pk)
         serializer = self.get_serializer(model,data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
-
-
-class DiaryDelete(generics.DestroyAPIView):
-    serializer_class = DiarySerializer
-
-    def get(self, request, pk):
-        model = Diary.objects.get(pk=pk)
-        serializer = DiarySerializer(model)
-        return Response(serializer.data)
-
+    
+    
     def delete(self,request,pk):
         model=Diary.objects.get(pk=pk)
         model.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
+
+
+
+
 
 @login_required
 def image_out(request,pk):

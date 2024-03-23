@@ -39,6 +39,7 @@ AUTH_USER_MODEL = 'users.User'
 INSTALLED_APPS = [
     'users',
     'diary',
+    'book',
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,7 +47,38 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #DRF
+    'rest_framework',
+    
+    #DRF Authentication
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    'django.contrib.sites',
+    
+    #Django Allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    
+    #s3
+    'storages',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    # 기타 DRF 설정...
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,6 +88,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -92,10 +125,10 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'crayolaDB',
-        'USER': 'threepark',
-        'PASSWORD': 'crayoladreams',
-        'HOST': 'threepark-db.ce3yygazjpgk.ap-northeast-2.rds.amazonaws.com', 
+        'NAME': 'sys',
+        'USER': 'root',
+        'PASSWORD': 'dai5ylove!',
+        'HOST': 'localhost', 
         'PORT': '3306', 
         'OPTIONS': {
         'init_command' : "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -142,3 +175,5 @@ LOGIN_REDIRECT_URL = "/diary/list/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SITE_ID=2
