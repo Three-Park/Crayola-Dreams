@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
-from core.permissions import *
 from .serializers import *
 
 class BookViewSet(GenericViewSet,
@@ -16,7 +15,7 @@ class BookViewSet(GenericViewSet,
                   mixins.UpdateModelMixin,
                   mixins.DestroyModelMixin):
     
-    permission_classes = [IsOwner, IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = BookSerializer
     queryset = Book.objects.all()
     

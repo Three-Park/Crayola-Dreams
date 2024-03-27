@@ -1,4 +1,5 @@
 ### Django ###
+.pyc
 .env
 *.log
 *.pot

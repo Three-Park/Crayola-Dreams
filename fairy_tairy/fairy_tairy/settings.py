@@ -15,6 +15,8 @@ import environ
 from pathlib import Path
 import os
 
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
 env = environ.Env(DEBUG=(bool, False))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -68,6 +70,9 @@ INSTALLED_APPS = [
     
     #s3
     'storages',
+    
+    'django.contrib.staticfiles', 
+    'drf_yasg',
 ]
 
 
