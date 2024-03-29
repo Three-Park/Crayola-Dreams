@@ -71,7 +71,7 @@ INSTALLED_APPS = [
     #s3
     'storages',
     
-    'django.contrib.staticfiles', 
+    #drf_yasg
     'drf_yasg',
 ]
 

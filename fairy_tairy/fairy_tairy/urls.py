@@ -24,8 +24,8 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 
-from books.views import BookViewSet
-from diaries.views import DiaryViewSet, DiaryBookViewSet, DiaryAdminViewSet
+from books.views import BookViewSet, PageViewSet
+from diaries.views import DiaryViewSet, DiaryAdminViewSet
 from emotion_chat.views import EmotionViewSet
 from images.views import ImageAdminViewSet, ImageViewSet
 from recommend_music.views import MusicAdminViewSet, MusicViewSet
@@ -47,8 +47,8 @@ schema_view = get_schema_view(
 
 router = DefaultRouter()
 router.register(r'books', BookViewSet, basename='books')
+router.register(r'pagies', PageViewSet, basename='pagies')
 router.register(r'diary', DiaryViewSet, basename='diary')
-router.register(r'diary_book', DiaryBookViewSet, basename='diary_book')
 router.register(r'diary_admin', DiaryAdminViewSet, basename='diary_admin')
 router.register(r'emotion', EmotionViewSet, basename='emotion')
 router.register(r'image', ImageViewSet, basename='image')

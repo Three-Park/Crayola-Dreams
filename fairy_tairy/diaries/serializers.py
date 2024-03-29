@@ -6,7 +6,7 @@ from books.serializers import BookSerializer
 class DiarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
-        fields = ['user','title','content','image_url','registered_date','last_update_date']
+        fields = ['user','title','content','registered_at','last_update_at']
         
         
 class DiaryAdminSerializer(serializers.ModelSerializer):
