@@ -44,3 +44,4 @@ class Follow(models.Model):
     class Meta:
         unique_together = ('follower', 'following_user')
         db_table = 'follow'
+        managed = True

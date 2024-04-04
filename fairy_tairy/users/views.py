@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from .models import User,Follow
+from .models import Follow
 from .serializers import FollowSerializer
 
 from .serializers import *
@@ -18,9 +18,10 @@ class FollowViewSet(GenericViewSet,
                            mixins.ListModelMixin,
                            mixins.CreateModelMixin,
                            mixins.DestroyModelMixin,
+                           mixins.RetrieveModelMixin,
                            mixins.UpdateModelMixin):
     
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = FollowSerializer
     queryset = Follow.objects.all()
     
@@ -28,6 +29,9 @@ class FollowViewSet(GenericViewSet,
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         followee = serializer.validated_data.get('following_user')
+        if followee==request.user:
+            return Response({"message": f"Cannot Follow yourself, {followee.username}."}, status=status.HTTP_400_BAD_REQUEST)
+            
         follow_request, created = Follow.objects.get_or_create(follower=request.user, following_user=followee)
 
         if created:

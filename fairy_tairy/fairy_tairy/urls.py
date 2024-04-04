@@ -24,6 +24,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 
+from users.views import FollowViewSet
 from books.views import BookViewSet, PageViewSet
 from diaries.views import DiaryViewSet, DiaryAdminViewSet
 from emotion_chat.views import EmotionViewSet
@@ -46,6 +47,7 @@ schema_view = get_schema_view(
 
 
 router = DefaultRouter()
+router.register(r'follow', FollowViewSet, basename='follow')
 router.register(r'books', BookViewSet, basename='books')
 router.register(r'pagies', PageViewSet, basename='pagies')
 router.register(r'diary', DiaryViewSet, basename='diary')

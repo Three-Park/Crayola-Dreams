@@ -4,6 +4,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
+from django.db.models import Q
 
 from .models import *
 from books.models import *
@@ -18,27 +19,22 @@ class DiaryViewSet(GenericViewSet,
                   mixins.UpdateModelMixin,
                   mixins.DestroyModelMixin):
     
-    permission_classes = [IsOwner, IsAuthenticated]
+    permission_classes = [IsFollowerOrOwner]
+
     serializer_class = DiarySerializer
     queryset = Diary.objects.all()
     
-    def filter_queryset(self, queryset):
-        # Filter queryset to show only diary entries belonging to the authenticated user
-        queryset = queryset.filter(user=self.request.user)
-        return super().filter_queryset(queryset)
-    
-    def create(self, request, *args, **kwargs):
-        # Ensure that the authenticated user is set as the owner of the created diary entry
-        request.data['user'] = request.user.id
-        return super().create(request, *args, **kwargs)
-    
-    def retrieve(self, request, *args, **kwargs):
-        # The IsOwner permission class already ensures that only the owner can retrieve their diary entries
-        return super().retrieve(request, *args, **kwargs)
-    
-    def update(self, request, *args, **kwargs):
-        # The IsOwner permission class already ensures that only the owner can update their diary entries
-        return super().update(request, *args, **kwargs)
+    def get_queryset(self):
+        """
+        본인의 diary는 모두 보임, 친구의 diary는 is_open=true인 경우만 보이도록 필터링
+        """
+        user = self.request.user
+        followed_users_1 = Follow.objects.filter(follower=user, status='accepted').values_list('following_user', flat=True)
+        followed_users_2 = Follow.objects.filter(following_user=user, status='accepted').values_list('follower', flat=True)
+        
+        return Diary.objects.filter(Q(user=user) |
+                                    Q(user__in=followed_users_1, is_open=True) | 
+                                    Q(user__in=followed_users_2, is_open=True))
     
     
 class DiaryAdminViewSet(GenericViewSet,
@@ -101,12 +97,8 @@ class DiaryAdminViewSet(GenericViewSet,
 
 
 class DiaryMusicViewSet(GenericViewSet,
-                  mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin):
-    permission_classes = [IsAuthenticated]
+                  mixins.ListModelMixin):
+    permission_classes = [IsOwner,IsAuthenticated]
     serializer_class = DiaryMusicSerializer
     queryset = Diary.objects.all()
     

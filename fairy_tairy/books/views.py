@@ -19,13 +19,11 @@ class BookViewSet(GenericViewSet,
                   mixins.UpdateModelMixin,
                   mixins.DestroyModelMixin):
     
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsFollowerOrOwner]
+
     serializer_class = BookSerializer
     queryset = Book.objects.all()
-    
-    def filter_queryset(self,queryset):
-        queryset = queryset.filter(user = self.request.user)
-        return super().filter_queryset(queryset)
+
 
 
 class PageViewSet(GenericViewSet,
@@ -35,7 +33,8 @@ class PageViewSet(GenericViewSet,
                   mixins.UpdateModelMixin,
                   mixins.DestroyModelMixin):
     
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsFollowerOrOwner]
+
     serializer_class = PageSerializer
     queryset = Page.objects.all()
     

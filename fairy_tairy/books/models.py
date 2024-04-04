@@ -10,6 +10,7 @@ class Book(models.Model):
     author = models.CharField(max_length = 30)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    is_open = models.BooleanField(default=False)
     
     class Meta: 
         managed = True
@@ -22,5 +23,7 @@ class Page(models.Model):
     page_num=models.IntegerField(blank=True,null=True)
 
     class Meta:
+        unique_together = ('book', 'diary')
         managed = True
         db_table='page'
+        

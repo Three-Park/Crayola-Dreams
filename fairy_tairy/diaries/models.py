@@ -11,6 +11,7 @@ class Diary(models.Model):
     content = models.TextField()
     registered_at = models.DateTimeField(auto_now_add=True)
     last_update_at = models.DateTimeField(auto_now=True)
+    is_open = models.BooleanField(default=False)
     
     class Meta: 
         managed = True
