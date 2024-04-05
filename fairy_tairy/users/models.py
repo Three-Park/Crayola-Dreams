@@ -24,6 +24,24 @@ class User(AbstractUser):
     class Meta:
         db_table = 'user'
     
-   
     def get_by_natural_key(self, username):
         return self.get(username=username)
+    
+class Follow(models.Model):
+    REQUESTED = 'requested'
+    ACCEPTED = 'accepted'
+    REJECTED = 'rejected'
+    STATUS_CHOICES = (
+        (REQUESTED, 'Requested'),
+        (ACCEPTED, 'Accepted'),
+        (REJECTED, 'Rejected'),
+    )
+
+    follower = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
+    following_user = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=REQUESTED)
+
+    class Meta:
+        unique_together = ('follower', 'following_user')
+        db_table = 'follow'
+        managed = True

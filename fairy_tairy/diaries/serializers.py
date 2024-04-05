@@ -6,16 +6,8 @@ from books.serializers import BookSerializer
 class DiarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
-        fields = ['user','title','content','image_url','registered_date','last_update_date']
+        fields = ['user','title','content','registered_at','last_update_at', 'is_open']
         
-        
-class DiaryAdminSerializer(serializers.ModelSerializer):
-    music = MusicSerializer(required=False)
-    book = BookSerializer(required=False)
-
-    class Meta:
-        model = Diary
-        fields = '__all__'
     
         
 class DiaryMusicSerializer(serializers.ModelSerializer):
@@ -25,10 +17,18 @@ class DiaryMusicSerializer(serializers.ModelSerializer):
         model = Diary
         fields =['id', 'music']
 
-
-class DiaryBookSerializer(serializers.ModelSerializer):
+        
+class DiaryAdminSerializer(serializers.ModelSerializer):
+    music = MusicSerializer(required=False)
     book = BookSerializer(required=False)
-    
+
     class Meta:
         model = Diary
-        fields = ['id', 'book']
+        fields = '__all__'
+
+# class DiaryBookSerializer(serializers.ModelSerializer):
+#     book = BookSerializer(required=False)
+    
+#     class Meta:
+#         model = Diary
+#         fields = ['id', 'book']
