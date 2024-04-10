@@ -1,4 +1,4 @@
-from .models import Follow
+from .models import Follow, User
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 
@@ -10,11 +10,12 @@ class FollowSerializer(serializers.ModelSerializer):
         model = Follow
         fields = '__all__'
 
-# class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
 
-#     class Meta:
-#         model = User
-#         fields = '__all__'
+    class Meta:
+        model = User
+        fields = '__all__'
+        exclude = ['password','id']
 
 
 # # 프로필

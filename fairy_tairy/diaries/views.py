@@ -19,22 +19,18 @@ class DiaryViewSet(GenericViewSet,
                   mixins.UpdateModelMixin,
                   mixins.DestroyModelMixin):
     
-    permission_classes = [IsFollowerOrOwner]
+    permission_classes = [IsOwner]
 
     serializer_class = DiarySerializer
     queryset = Diary.objects.all()
     
-    def get_queryset(self):
-        """
-        본인의 diary는 모두 보임, 친구의 diary는 is_open=true인 경우만 보이도록 필터링
-        """
-        user = self.request.user
-        followed_users_1 = Follow.objects.filter(follower=user, status='accepted').values_list('following_user', flat=True)
-        followed_users_2 = Follow.objects.filter(following_user=user, status='accepted').values_list('follower', flat=True)
-        
-        return Diary.objects.filter(Q(user=user) |
-                                    Q(user__in=followed_users_1, is_open=True) | 
-                                    Q(user__in=followed_users_2, is_open=True))
+    def filter_queryset(self,queryset):
+        queryset = queryset.filter(user=self.request.user)
+        return super().filter_queryset(queryset)
+    
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     return Diary.objects.filter(Q(user=user))
     
     
 class DiaryAdminViewSet(GenericViewSet,
@@ -47,54 +43,7 @@ class DiaryAdminViewSet(GenericViewSet,
     permission_classes = [IsAdminUser]
     serializer_class = DiarySerializer
     queryset = Diary.objects.all()
-
-# class DiaryBookViewSet(GenericViewSet,
-#                   mixins.ListModelMixin,
-#                   mixins.RetrieveModelMixin,
-#                   mixins.UpdateModelMixin):
     
-#     permission_classes = [IsOwner, IsAuthenticated]
-#     serializer_class = DiarySerializer
-#     queryset = Diary.objects.all()
-    
-#     def filter_queryset(self,queryset):
-#         queryset = queryset.filter(user = self.request.user)
-#         return super().filter_queryset(queryset)
-    
-#     @action(detail=True, methods=['GET'])
-#     def get_book_diaries(self, request, pk = None):
-#         diary = self.get_object()
-#         book_diaries = Diary.objects.filter(book = diary.book, user = request.user)
-#         serializer = self.get_serializer(book_diaries, many = True)
-#         return Response(serializer.data)
-    
-#     @action(detail=True, methods=['POST'])
-#     def connect_to_book(self, request, pk=None):
-#         diary = self.get_object()
-#         book_id = request.data.get('book_id')
-
-#         if not book_id:
-#             return Response({'detail': 'book_id is required'}, status=status.HTTP_400_BAD_REQUEST)
-
-#         book = get_object_or_404(Book, id=book_id, user=request.user)
-
-#         diary.book = book
-#         diary.save()
-
-#         serializer = self.get_serializer(diary)
-#         return Response(serializer.data)
-
-#     @action(detail=True, methods=['POST'])
-#     def disconnect_book(self, request, pk=None):
-#         diary = self.get_object()
-
-#         # 연결을 해제하려면 해당 필드를 None으로 설정
-#         diary.book = None
-#         diary.save()
-
-#         serializer = self.get_serializer(diary)
-#         return Response(serializer.data)
-
 
 class DiaryMusicViewSet(GenericViewSet,
                   mixins.ListModelMixin):

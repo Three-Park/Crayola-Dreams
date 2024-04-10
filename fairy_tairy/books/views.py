@@ -42,6 +42,11 @@ class PageViewSet(GenericViewSet,
         queryset = queryset.filter(diary__user=self.request.user)
         return super().filter_queryset(queryset)
     
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()  
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
     @action(detail=True, methods=['GET'])
     def connect_book_diary(self, request, pk=None):
         page = self.get_object()

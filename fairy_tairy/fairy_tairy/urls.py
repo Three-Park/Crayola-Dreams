@@ -24,13 +24,13 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 
-from users.views import FollowViewSet
+from users.views import FollowViewSet,UserViewSet
 from books.views import BookViewSet, PageViewSet
-from diaries.views import DiaryViewSet, DiaryAdminViewSet
-from emotion_chat.views import EmotionViewSet
 from images.views import ImageAdminViewSet, ImageViewSet
+from diaries.views import DiaryViewSet, DiaryAdminViewSet
+from community.views import CommunityDiaryViewSet
+from emotion_chat.views import EmotionViewSet
 from recommend_music.views import MusicAdminViewSet, MusicViewSet
-
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -57,7 +57,8 @@ router.register(r'image', ImageViewSet, basename='image')
 router.register(r'image_admin', ImageAdminViewSet, basename='image_admin')
 router.register(r'music',MusicViewSet,basename='music')
 router.register(r'music_admin', MusicAdminViewSet, basename='music_admin')
-
+router.register(r'community', CommunityDiaryViewSet, basename='community')
+router.register(r'user', UserViewSet, basename='user')
 
 urlpatterns = router.urls
 
