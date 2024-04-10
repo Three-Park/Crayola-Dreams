@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from storages.backends.s3boto3 import S3Boto3Storage
 import datetime
 import environ
 from pathlib import Path
@@ -25,10 +25,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
+# Dj-Rest-Auth See: https://dj-rest-auth.readthedocs.io/en/latest/installation.html
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
-
+OPENAI_API_KEY = env('OPENAI_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'books',
     'recommend_music',
     'users',
+    'community',
     
     #default
     'django.contrib.admin',
@@ -58,7 +59,7 @@ INSTALLED_APPS = [
     
     #DRF Authentication
     'rest_framework.authtoken',
-    'rest_framework_simplejwt',
+    # 'rest_framework_simplejwt',
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'django.contrib.sites',
@@ -73,6 +74,12 @@ INSTALLED_APPS = [
     
     #drf_yasg
     'drf_yasg',
+    
+    # crispy for filtering, search, sort
+    # 'crispy_forms',
+    
+    # 단위 테스트 django-node
+    # 'django-nose',
 ]
 
 
@@ -95,11 +102,16 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-        "rest_framework.authentication.SessionAuthentication",
+        # "rest_framework.authentication.SessionAuthentication",
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    # 'DEFAULT_FILTER_BACKENDS':[
+    #     'rest_framework.filters.DjangoFilterBackend',
+    #     'rest_framework.filters.SearchFilter',
+    #     'rest_framework.filters.OrderingFilter',
+    # ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
     
@@ -118,7 +130,6 @@ REST_AUTH = {
     # set Session login false : if true, sessionid remains in cookie info
     'SESSION_LOGIN' : False
 }
-
 JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
     # JWT 토큰의 유효기간 설정
@@ -134,7 +145,6 @@ AUTHENTICATION_BACKENDS = [
     'rest_framework.authentication.BasicAuthentication',
     'rest_framework.authentication.TokenAuthentication',
 ]
-
 
 
 MIDDLEWARE = [
@@ -186,43 +196,39 @@ DATABASES = {
     }
 }
 
-'''
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('THREEPARK_DB_NAME'),
-        'USER': os.environ.get('THREEPARK_DB_USER'),
-        'PASSWORD': os.environ.get('THREEPARK_DB_PW'),
-        'HOST':  os.environ.get('THREEPARK_DB_HOST'), 
-        'PORT':  os.environ.get('THREEPARK_DB_PORT'), 
-        'OPTIONS': {
-        'init_command' : "SET sql_mode='STRICT_TRANS_TABLES'",
-        },     
-    }
-}
 
 
 ## AWS S3 Setting
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-
-AWS_ACCESS_KEY_ID = os.environ.get('S3_ACCESS_KEY')
-AWS_SECRET_ACCESS_KEY = os.environ.get('S3_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME =  os.environ.get('S3_THREEPARK_NAME')
+AWS_ACCESS_KEY_ID =env('S3_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = env('S3_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME =  env('S3_THREEPARK_NAME')
 AWS_QUERYSTRING_AUTH = False
-AWS_S3_REGION_NAME = 'ap-northeast-2' 
+AWS_S3_REGION_NAME =env('AWS_S3_REGION_NAME')
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1024000000 # value in bytes 1GB here
 FILE_UPLOAD_MAX_MEMORY_SIZE = 1024000000
-#Medis Setting
-DEFAULT_FILE_STORAGE = 'fairy_tairy.storages.S3DefaultStorage'
-MEDIA_URL = "http://%s/media/" % AWS_S3_CUSTOM_DOMAIN'''
+
+# storage URL Setting
+
+
+# DEFAULT_FILE_STORAGE = 'fairy_tairy.storages.S3DefaultStorage'
+MEDIA_URL = "http://%s/media/" % AWS_S3_CUSTOM_DOMAIN
+STATIC_URL ="http://%s/static/" % AWS_S3_CUSTOM_DOMAIN
+'''
+
+
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -243,11 +249,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'ko-kr'
-
 TIME_ZONE = 'Asia/Seoul'
-
 USE_I18N = True
-
 USE_TZ = True
 
 

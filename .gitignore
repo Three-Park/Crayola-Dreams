@@ -1,4 +1,5 @@
 ### Django ###
+fairy_tairy/.env
 .env
 *.log
 *.pot

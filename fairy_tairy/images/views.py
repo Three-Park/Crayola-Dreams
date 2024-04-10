@@ -181,8 +181,7 @@ class ImageAdminViewSet(GenericViewSet,
             print('img: ',image_url)
             if not image_url:
                 return Response({'error': "Failed to get image from Flask"}, status=status.HTTP_400_BAD_REQUEST)
-                
-            print('save')
+
             new_image = Image.objects.get_or_create(diary=diary, image_url=f"{image_url}.png", image_prompt=image_prompt)
             return Response({"message": "Image uploaded successfully"}, status=status.HTTP_201_CREATED)
 

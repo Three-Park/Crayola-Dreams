@@ -1,3 +1,6 @@
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
 import torch
 from transformers import PreTrainedTokenizerFast, GPT2LMHeadModel
 
@@ -40,3 +43,5 @@ def get_comment(input_text): #koGPT2 모델을 활용하여 입력된 질문에 
 # 책상 위에는 무언가를 해야겠다는 생각으로 쌓아둔 책과 종이들이 더럽혀져만 가는데, 손을 대기 싫었다.
 # '''
 # print(get_comment(diary))
+
+# def get_sentiment

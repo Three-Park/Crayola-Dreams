@@ -1,0 +1,1872 @@
+swagger: '2.0'
+info:
+  title: Snippets API
+  description: Test description
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    email: contact@snippets.local
+  license:
+    name: BSD License
+  version: v1
+host: 127.0.0.1:8000
+schemes:
+  - http
+basePath: /
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+  - Basic: []
+paths:
+  /books/:
+    get:
+      operationId: books_list
+      description: ''
+      parameters:
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Book'
+      tags:
+        - books
+    post:
+      operationId: books_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Book'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Book'
+      tags:
+        - books
+    parameters: []
+  /books/{id}/:
+    get:
+      operationId: books_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Book'
+      tags:
+        - books
+    put:
+      operationId: books_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Book'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Book'
+      tags:
+        - books
+    patch:
+      operationId: books_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Book'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Book'
+      tags:
+        - books
+    delete:
+      operationId: books_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - books
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this book.
+        required: true
+        type: integer
+  /community/:
+    get:
+      operationId: community_list
+      description: ''
+      parameters:
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/CommunityDiary'
+      tags:
+        - community
+    post:
+      operationId: community_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CommunityDiary'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/CommunityDiary'
+      tags:
+        - community
+    parameters: []
+  /community/{id}/:
+    get:
+      operationId: community_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/CommunityDiary'
+      tags:
+        - community
+    put:
+      operationId: community_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CommunityDiary'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/CommunityDiary'
+      tags:
+        - community
+    patch:
+      operationId: community_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CommunityDiary'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/CommunityDiary'
+      tags:
+        - community
+    delete:
+      operationId: community_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - community
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this diary.
+        required: true
+        type: integer
+  /diary/:
+    get:
+      operationId: diary_list
+      description: ''
+      parameters:
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Diary'
+      tags:
+        - diary
+    post:
+      operationId: diary_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Diary'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diary'
+      tags:
+        - diary
+    parameters: []
+  /diary/{id}/:
+    get:
+      operationId: diary_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diary'
+      tags:
+        - diary
+    put:
+      operationId: diary_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Diary'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diary'
+      tags:
+        - diary
+    patch:
+      operationId: diary_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Diary'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diary'
+      tags:
+        - diary
+    delete:
+      operationId: diary_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - diary
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this diary.
+        required: true
+        type: integer
+  /diary_admin/:
+    get:
+      operationId: diary_admin_list
+      description: ''
+      parameters:
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Diary'
+      tags:
+        - diary_admin
+    post:
+      operationId: diary_admin_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Diary'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diary'
+      tags:
+        - diary_admin
+    parameters: []
+  /diary_admin/{id}/:
+    get:
+      operationId: diary_admin_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diary'
+      tags:
+        - diary_admin
+    put:
+      operationId: diary_admin_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Diary'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diary'
+      tags:
+        - diary_admin
+    patch:
+      operationId: diary_admin_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Diary'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diary'
+      tags:
+        - diary_admin
+    delete:
+      operationId: diary_admin_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - diary_admin
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this diary.
+        required: true
+        type: integer
+  /dj-rest-auth/login/:
+    post:
+      operationId: dj-rest-auth_login_create
+      description: |-
+        Check the credentials and return the REST Token
+        if the credentials are valid and authenticated.
+        Calls Django Auth login method to register User ID
+        in Django session framework
+
+        Accept the following POST parameters: username, password
+        Return the REST Framework Token Object's key.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Login'
+      tags:
+        - dj-rest-auth
+    parameters: []
+  /dj-rest-auth/logout/:
+    get:
+      operationId: dj-rest-auth_logout_list
+      summary: |-
+        Calls Django logout method and delete the Token object
+        assigned to the current User object.
+      description: Accepts/Returns nothing.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - dj-rest-auth
+    post:
+      operationId: dj-rest-auth_logout_create
+      summary: |-
+        Calls Django logout method and delete the Token object
+        assigned to the current User object.
+      description: Accepts/Returns nothing.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - dj-rest-auth
+    parameters: []
+  /dj-rest-auth/password/change/:
+    post:
+      operationId: dj-rest-auth_password_change_create
+      summary: Calls Django Auth SetPasswordForm save method.
+      description: |-
+        Accepts the following POST parameters: new_password1, new_password2
+        Returns the success/fail message.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PasswordChange'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PasswordChange'
+      tags:
+        - dj-rest-auth
+    parameters: []
+  /dj-rest-auth/password/reset/:
+    post:
+      operationId: dj-rest-auth_password_reset_create
+      summary: Calls Django Auth PasswordResetForm save method.
+      description: |-
+        Accepts the following POST parameters: email
+        Returns the success/fail message.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PasswordReset'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PasswordReset'
+      tags:
+        - dj-rest-auth
+    parameters: []
+  /dj-rest-auth/password/reset/confirm/:
+    post:
+      operationId: dj-rest-auth_password_reset_confirm_create
+      summary: |-
+        Password reset e-mail link is confirmed, therefore
+        this resets the user's password.
+      description: |-
+        Accepts the following POST parameters: token, uid,
+            new_password1, new_password2
+        Returns the success/fail message.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PasswordResetConfirm'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PasswordResetConfirm'
+      tags:
+        - dj-rest-auth
+    parameters: []
+  /dj-rest-auth/registration/:
+    post:
+      operationId: dj-rest-auth_registration_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Register'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Register'
+      tags:
+        - dj-rest-auth
+    parameters: []
+  /dj-rest-auth/registration/resend-email/:
+    post:
+      operationId: dj-rest-auth_registration_resend-email_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ResendEmailVerification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/ResendEmailVerification'
+      tags:
+        - dj-rest-auth
+    parameters: []
+  /dj-rest-auth/registration/verify-email/:
+    post:
+      operationId: dj-rest-auth_registration_verify-email_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/VerifyEmail'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/VerifyEmail'
+      tags:
+        - dj-rest-auth
+    parameters: []
+  /dj-rest-auth/token/refresh/:
+    post:
+      operationId: dj-rest-auth_token_refresh_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CookieTokenRefresh'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/CookieTokenRefresh'
+      tags:
+        - dj-rest-auth
+    parameters: []
+  /dj-rest-auth/token/verify/:
+    post:
+      operationId: dj-rest-auth_token_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TokenVerify'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenVerify'
+      tags:
+        - dj-rest-auth
+    parameters: []
+  /dj-rest-auth/user/:
+    get:
+      operationId: dj-rest-auth_user_read
+      summary: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+      description: |-
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDetails'
+      tags:
+        - dj-rest-auth
+    put:
+      operationId: dj-rest-auth_user_update
+      summary: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+      description: |-
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserDetails'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDetails'
+      tags:
+        - dj-rest-auth
+    patch:
+      operationId: dj-rest-auth_user_partial_update
+      summary: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+      description: |-
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserDetails'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDetails'
+      tags:
+        - dj-rest-auth
+    parameters: []
+  /emotion/:
+    get:
+      operationId: emotion_list
+      description: ''
+      parameters:
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Emotion'
+      tags:
+        - emotion
+    post:
+      operationId: emotion_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Emotion'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Emotion'
+      tags:
+        - emotion
+    parameters: []
+  /emotion/{id}/:
+    put:
+      operationId: emotion_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Emotion'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Emotion'
+      tags:
+        - emotion
+    patch:
+      operationId: emotion_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Emotion'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Emotion'
+      tags:
+        - emotion
+    delete:
+      operationId: emotion_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - emotion
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this emotion.
+        required: true
+        type: integer
+  /follow/:
+    get:
+      operationId: follow_list
+      description: ''
+      parameters:
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Follow'
+      tags:
+        - follow
+    post:
+      operationId: follow_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Follow'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Follow'
+      tags:
+        - follow
+    parameters: []
+  /follow/{id}/:
+    get:
+      operationId: follow_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Follow'
+      tags:
+        - follow
+    put:
+      operationId: follow_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Follow'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Follow'
+      tags:
+        - follow
+    patch:
+      operationId: follow_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Follow'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Follow'
+      tags:
+        - follow
+    delete:
+      operationId: follow_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - follow
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this follow.
+        required: true
+        type: integer
+  /image/:
+    get:
+      operationId: image_list
+      description: ''
+      parameters:
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/ImageAdmin'
+      tags:
+        - image
+    post:
+      operationId: image_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ImageAdmin'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/ImageAdmin'
+      tags:
+        - image
+    parameters: []
+  /image/{id}/:
+    put:
+      operationId: image_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ImageAdmin'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ImageAdmin'
+      tags:
+        - image
+    patch:
+      operationId: image_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ImageAdmin'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ImageAdmin'
+      tags:
+        - image
+    delete:
+      operationId: image_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - image
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this image.
+        required: true
+        type: integer
+  /image_admin/:
+    get:
+      operationId: image_admin_list
+      description: ''
+      parameters:
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/ImageAdmin'
+      tags:
+        - image_admin
+    post:
+      operationId: image_admin_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ImageAdmin'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/ImageAdmin'
+      tags:
+        - image_admin
+    parameters: []
+  /image_admin/{id}/:
+    get:
+      operationId: image_admin_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ImageAdmin'
+      tags:
+        - image_admin
+    put:
+      operationId: image_admin_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ImageAdmin'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ImageAdmin'
+      tags:
+        - image_admin
+    patch:
+      operationId: image_admin_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ImageAdmin'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ImageAdmin'
+      tags:
+        - image_admin
+    delete:
+      operationId: image_admin_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - image_admin
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this image.
+        required: true
+        type: integer
+  /music/:
+    get:
+      operationId: music_list
+      description: ''
+      parameters:
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Music'
+      tags:
+        - music
+    post:
+      operationId: music_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Music'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Music'
+      tags:
+        - music
+    parameters: []
+  /music/{id}/:
+    delete:
+      operationId: music_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - music
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this music.
+        required: true
+        type: integer
+  /music_admin/:
+    get:
+      operationId: music_admin_list
+      description: ''
+      parameters:
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Music'
+      tags:
+        - music_admin
+    post:
+      operationId: music_admin_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Music'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Music'
+      tags:
+        - music_admin
+    parameters: []
+  /music_admin/{id}/:
+    get:
+      operationId: music_admin_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Music'
+      tags:
+        - music_admin
+    put:
+      operationId: music_admin_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Music'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Music'
+      tags:
+        - music_admin
+    patch:
+      operationId: music_admin_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Music'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Music'
+      tags:
+        - music_admin
+    delete:
+      operationId: music_admin_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - music_admin
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this music.
+        required: true
+        type: integer
+  /pagies/:
+    get:
+      operationId: pagies_list
+      description: ''
+      parameters:
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Page'
+      tags:
+        - pagies
+    post:
+      operationId: pagies_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Page'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Page'
+      tags:
+        - pagies
+    parameters: []
+  /pagies/{id}/:
+    get:
+      operationId: pagies_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Page'
+      tags:
+        - pagies
+    put:
+      operationId: pagies_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Page'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Page'
+      tags:
+        - pagies
+    patch:
+      operationId: pagies_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Page'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Page'
+      tags:
+        - pagies
+    delete:
+      operationId: pagies_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - pagies
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this page.
+        required: true
+        type: integer
+  /pagies/{id}/connect_book_diary/:
+    get:
+      operationId: pagies_connect_book_diary
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Page'
+      tags:
+        - pagies
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this page.
+        required: true
+        type: integer
+definitions:
+  Book:
+    required:
+      - book_title
+      - author
+      - description
+      - user
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      book_title:
+        title: Book title
+        type: string
+        maxLength: 30
+        minLength: 1
+      author:
+        title: Author
+        type: string
+        maxLength: 30
+        minLength: 1
+      description:
+        title: Description
+        type: string
+        minLength: 1
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      is_open:
+        title: Is open
+        type: boolean
+      user:
+        title: User
+        type: integer
+  CommunityDiary:
+    required:
+      - user
+      - title
+      - content
+    type: object
+    properties:
+      user:
+        title: User
+        type: integer
+      title:
+        title: Title
+        type: string
+        maxLength: 30
+        minLength: 1
+      content:
+        title: Content
+        type: string
+        minLength: 1
+      registered_at:
+        title: Registered at
+        type: string
+        format: date-time
+        readOnly: true
+      last_update_at:
+        title: Last update at
+        type: string
+        format: date-time
+        readOnly: true
+      is_open:
+        title: Is open
+        type: boolean
+  Diary:
+    required:
+      - user
+      - title
+      - content
+    type: object
+    properties:
+      user:
+        title: User
+        type: integer
+      title:
+        title: Title
+        type: string
+        maxLength: 30
+        minLength: 1
+      content:
+        title: Content
+        type: string
+        minLength: 1
+      registered_at:
+        title: Registered at
+        type: string
+        format: date-time
+        readOnly: true
+      last_update_at:
+        title: Last update at
+        type: string
+        format: date-time
+        readOnly: true
+      is_open:
+        title: Is open
+        type: boolean
+  Login:
+    required:
+      - password
+    type: object
+    properties:
+      username:
+        title: Username
+        type: string
+      email:
+        title: Email
+        type: string
+        format: email
+      password:
+        title: Password
+        type: string
+        minLength: 1
+  PasswordChange:
+    required:
+      - new_password1
+      - new_password2
+    type: object
+    properties:
+      new_password1:
+        title: New password1
+        type: string
+        maxLength: 128
+        minLength: 1
+      new_password2:
+        title: New password2
+        type: string
+        maxLength: 128
+        minLength: 1
+  PasswordReset:
+    required:
+      - email
+    type: object
+    properties:
+      email:
+        title: Email
+        type: string
+        format: email
+        minLength: 1
+  PasswordResetConfirm:
+    required:
+      - new_password1
+      - new_password2
+      - uid
+      - token
+    type: object
+    properties:
+      new_password1:
+        title: New password1
+        type: string
+        maxLength: 128
+        minLength: 1
+      new_password2:
+        title: New password2
+        type: string
+        maxLength: 128
+        minLength: 1
+      uid:
+        title: Uid
+        type: string
+        minLength: 1
+      token:
+        title: Token
+        type: string
+        minLength: 1
+  Register:
+    required:
+      - username
+      - password1
+      - password2
+    type: object
+    properties:
+      username:
+        title: Username
+        type: string
+        maxLength: 150
+        minLength: 1
+      email:
+        title: Email
+        type: string
+        format: email
+        minLength: 1
+      password1:
+        title: Password1
+        type: string
+        minLength: 1
+      password2:
+        title: Password2
+        type: string
+        minLength: 1
+  ResendEmailVerification:
+    type: object
+    properties:
+      email:
+        title: Email
+        type: string
+        format: email
+        minLength: 1
+  VerifyEmail:
+    required:
+      - key
+    type: object
+    properties:
+      key:
+        title: Key
+        type: string
+        minLength: 1
+  CookieTokenRefresh:
+    type: object
+    properties:
+      refresh:
+        title: Refresh
+        description: WIll override cookie.
+        type: string
+        minLength: 1
+      access:
+        title: Access
+        type: string
+        readOnly: true
+        minLength: 1
+  TokenVerify:
+    required:
+      - token
+    type: object
+    properties:
+      token:
+        title: Token
+        type: string
+        minLength: 1
+  UserDetails:
+    required:
+      - username
+    type: object
+    properties:
+      pk:
+        title: ID
+        type: integer
+        readOnly: true
+      username:
+        title: 사용자 이름
+        description: 150자 이하 문자, 숫자 그리고 @/./+/-/_만 가능합니다.
+        type: string
+        pattern: ^[\w.@+-]+$
+        maxLength: 150
+        minLength: 1
+      email:
+        title: 이메일 주소
+        type: string
+        format: email
+        readOnly: true
+        minLength: 1
+      first_name:
+        title: 이름
+        type: string
+        maxLength: 150
+      last_name:
+        title: 성
+        type: string
+        maxLength: 150
+  Emotion:
+    required:
+      - diary
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      emotion_label:
+        title: Emotion label
+        type: string
+        maxLength: 10
+      name:
+        title: Name
+        type: string
+        maxLength: 30
+      emotion_prompt:
+        title: Emotion prompt
+        type: string
+      chat:
+        title: Chat
+        type: string
+      diary:
+        title: Diary
+        type: integer
+  Follow:
+    required:
+      - follower
+      - following_user
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      status:
+        title: Status
+        type: string
+        enum:
+          - requested
+          - accepted
+          - rejected
+      follower:
+        title: Follower
+        type: integer
+      following_user:
+        title: Following user
+        type: integer
+  ImageAdmin:
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      image:
+        title: Image
+        type: string
+        readOnly: true
+        x-nullable: true
+        format: uri
+      image_url:
+        title: Image url
+        type: string
+        format: uri
+        maxLength: 200
+        minLength: 1
+        x-nullable: true
+      image_prompt:
+        title: Image prompt
+        type: string
+        minLength: 1
+        x-nullable: true
+      diary:
+        title: Diary
+        type: integer
+        x-nullable: true
+  Music:
+    required:
+      - music_title
+      - artist
+      - music_url
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      music_title:
+        title: Music title
+        type: string
+        maxLength: 50
+        minLength: 1
+      artist:
+        title: Artist
+        type: string
+        maxLength: 100
+        minLength: 1
+      music_url:
+        title: Music url
+        type: string
+        format: uri
+        maxLength: 200
+        minLength: 1
+  Page:
+    required:
+      - book
+      - diary
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      page_num:
+        title: Page num
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      book:
+        title: Book
+        type: integer
+      diary:
+        title: Diary
+        type: integer

@@ -20,9 +20,9 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return request.user.is_authenticated
     
     def has_object_permission(self, request, view, obj):
-        # 읽기 권한은 항상 허용함
-        if request.method in permissions.SAFE_METHODS:
-            return True
+        # 
+        # if request.method in permissions.SAFE_METHODS:
+        #     return True
 
         # 요청한 사용자가 해당 객체의 소유자인 경우에만 쓰기 권한을 부여함
         return obj.follower == request.user or obj.following_user == request.user

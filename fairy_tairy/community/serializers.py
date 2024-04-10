@@ -1,12 +1,8 @@
 from rest_framework import serializers
-from .models import Friend, FriendRequest
+from diaries.models import Diary
+from users.models import Follow
 
-class FriendSerializer(serializers.ModelSerializer):
+class CommunityDiarySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Friend
-        fields = '__all__'
-
-class FriendRequestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FriendRequest
-        fields = '__all__'
+        model = Diary
+        fields = ['user','title','content','registered_at','last_update_at', 'is_open']
