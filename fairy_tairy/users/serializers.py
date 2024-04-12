@@ -10,12 +10,12 @@ class FollowSerializer(serializers.ModelSerializer):
         model = Follow
         fields = '__all__'
 
-class UserSerializer(serializers.ModelSerializer):
+# class UserSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = User
-        fields = '__all__'
-        exclude = ['password','id']
+#     class Meta:
+#         model = User
+#         fields = '__all__'
+#         exclude = ['password','id']
 
 
 # # 프로필
