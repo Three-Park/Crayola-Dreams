@@ -33,7 +33,7 @@ OPENAI_API_KEY = env('OPENAI_API_KEY')
 DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
-
+FLASK_URL=env('FLASK_URL')
 
 # Application definition
 
