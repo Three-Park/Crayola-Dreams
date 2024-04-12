@@ -65,15 +65,15 @@ class FollowViewSet(GenericViewSet,
         return Response({"message": "Follow request rejected"}, status=status.HTTP_200_OK)
        
         
-class UserViewSet(GenericViewSet,
-                     mixins.ListModelMixin,
-                     mixins.UpdateModelMixin):
+# class UserViewSet(GenericViewSet,
+#                      mixins.ListModelMixin,
+#                      mixins.UpdateModelMixin):
 
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [IsOwner]
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#     permission_classes = [IsOwner]
     
-    def filter_queryset(self,queryset):
-        queryset = queryset.filter(user=self.request.user)
-        return super().filter_queryset(queryset)
+#     def filter_queryset(self,queryset):
+#         queryset = queryset.filter(user=self.request.user)
+#         return super().filter_queryset(queryset)
  

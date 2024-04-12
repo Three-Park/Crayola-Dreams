@@ -24,7 +24,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 
-from users.views import FollowViewSet,UserViewSet
+from users.views import FollowViewSet
 from books.views import BookViewSet, PageViewSet
 from images.views import ImageAdminViewSet, ImageViewSet
 from diaries.views import DiaryViewSet, DiaryAdminViewSet
@@ -58,7 +58,7 @@ router.register(r'image_admin', ImageAdminViewSet, basename='image_admin')
 router.register(r'music',MusicViewSet,basename='music')
 router.register(r'music_admin', MusicAdminViewSet, basename='music_admin')
 router.register(r'community', CommunityDiaryViewSet, basename='community')
-router.register(r'user', UserViewSet, basename='user')
+# router.register(r'user', UserViewSet, basename='user')
 
 urlpatterns = router.urls
 
