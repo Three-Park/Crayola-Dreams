@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
 
+from django.conf import settings 
 from .serializers import *
 from .models import *
 from ai.generate_image import *
@@ -18,7 +19,7 @@ import time
 def request_image_from_flask(prompt):
     # Flask 서버의 URL
     # flask_url = 'http://localhost:5000/get_image'
-    flask_url = 'http://34.64.98.73:5000/get_image'
+    flask_url = f'http://{settings.FLASK_URL}:5000/get_image'
     
     try:
         # HTTP POST 요청으로 prompt를 Flask에 전송
