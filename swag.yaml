@@ -8,7 +8,7 @@ info:
   license:
     name: BSD License
   version: v1
-host: 127.0.0.1:8000
+host: 43.202.125.125:8000
 schemes:
   - http
 basePath: /
@@ -460,6 +460,117 @@ paths:
           description: ''
       tags:
         - diary_admin
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this diary.
+        required: true
+        type: integer
+  /diary_music/:
+    get:
+      operationId: diary_music_list
+      description: ''
+      parameters:
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/DiaryMusic'
+      tags:
+        - diary_music
+    post:
+      operationId: diary_music_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DiaryMusic'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/DiaryMusic'
+      tags:
+        - diary_music
+    parameters: []
+  /diary_music/{id}/:
+    get:
+      operationId: diary_music_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DiaryMusic'
+      tags:
+        - diary_music
+    put:
+      operationId: diary_music_update
+      description: 음악 추천 & best music저장/연결
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DiaryMusic'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DiaryMusic'
+      tags:
+        - diary_music
+    patch:
+      operationId: diary_music_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DiaryMusic'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DiaryMusic'
+      tags:
+        - diary_music
+    delete:
+      operationId: diary_music_delete
+      description: 현재 음악 연결 삭제
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - diary_music
     parameters:
       - name: id
         in: path
@@ -987,7 +1098,7 @@ paths:
               results:
                 type: array
                 items:
-                  $ref: '#/definitions/ImageAdmin'
+                  $ref: '#/definitions/Image'
       tags:
         - image
     post:
@@ -998,16 +1109,27 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/ImageAdmin'
+            $ref: '#/definitions/Image'
       responses:
         '201':
           description: ''
           schema:
-            $ref: '#/definitions/ImageAdmin'
+            $ref: '#/definitions/Image'
       tags:
         - image
     parameters: []
   /image/{id}/:
+    get:
+      operationId: image_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Image'
+      tags:
+        - image
     put:
       operationId: image_update
       description: ''
@@ -1016,12 +1138,12 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/ImageAdmin'
+            $ref: '#/definitions/Image'
       responses:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/ImageAdmin'
+            $ref: '#/definitions/Image'
       tags:
         - image
     patch:
@@ -1032,12 +1154,12 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/ImageAdmin'
+            $ref: '#/definitions/Image'
       responses:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/ImageAdmin'
+            $ref: '#/definitions/Image'
       tags:
         - image
     delete:
@@ -1576,6 +1698,57 @@ definitions:
       is_open:
         title: Is open
         type: boolean
+  Music:
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      music_title:
+        title: Music title
+        type: string
+        maxLength: 100
+        minLength: 1
+        x-nullable: true
+      artist:
+        title: Artist
+        type: string
+        maxLength: 100
+        minLength: 1
+        x-nullable: true
+      genre:
+        title: Genre
+        type: string
+        maxLength: 20
+        minLength: 1
+        x-nullable: true
+      music_url:
+        title: Music url
+        type: string
+        format: uri
+        maxLength: 200
+        minLength: 1
+        x-nullable: true
+  DiaryMusic:
+    required:
+      - user
+      - content
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      user:
+        title: User
+        type: integer
+      content:
+        title: Content
+        type: string
+        minLength: 1
+      music:
+        $ref: '#/definitions/Music'
   Login:
     required:
       - password
@@ -1751,10 +1924,6 @@ definitions:
         title: Emotion label
         type: string
         maxLength: 10
-      name:
-        title: Name
-        type: string
-        maxLength: 30
       emotion_prompt:
         title: Emotion prompt
         type: string
@@ -1787,7 +1956,7 @@ definitions:
       following_user:
         title: Following user
         type: integer
-  ImageAdmin:
+  Image:
     type: object
     properties:
       id:
@@ -1799,12 +1968,6 @@ definitions:
         type: string
         format: date-time
         readOnly: true
-      image:
-        title: Image
-        type: string
-        readOnly: true
-        x-nullable: true
-        format: uri
       image_url:
         title: Image url
         type: string
@@ -1821,33 +1984,34 @@ definitions:
         title: Diary
         type: integer
         x-nullable: true
-  Music:
-    required:
-      - music_title
-      - artist
-      - music_url
+  ImageAdmin:
     type: object
     properties:
       id:
         title: ID
         type: integer
         readOnly: true
-      music_title:
-        title: Music title
+      created_at:
+        title: Created at
         type: string
-        maxLength: 50
-        minLength: 1
-      artist:
-        title: Artist
-        type: string
-        maxLength: 100
-        minLength: 1
-      music_url:
-        title: Music url
+        format: date-time
+        readOnly: true
+      image_url:
+        title: Image url
         type: string
         format: uri
         maxLength: 200
         minLength: 1
+        x-nullable: true
+      image_prompt:
+        title: Image prompt
+        type: string
+        minLength: 1
+        x-nullable: true
+      diary:
+        title: Diary
+        type: integer
+        x-nullable: true
   Page:
     required:
       - book
