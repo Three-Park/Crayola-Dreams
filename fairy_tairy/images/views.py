@@ -2,23 +2,24 @@ from rest_framework import mixins,status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
+from django.http import Http404
+
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 from django.conf import settings 
 from .serializers import *
 from .models import *
-from ai.generate_image import *
+from ai.generate_prompt import *
 from fairy_tairy.permissions import *
 
 import requests
-import logging
-import base64
-import boto3
-import uuid
 import time
 
 def request_image_from_flask(prompt):
-    # Flask 서버의 URL
-    # flask_url = 'http://localhost:5000/get_image'
+    """
+    생성된 prompt로 이미지 생성
+    """
     flask_url = f'http://{settings.FLASK_URL}:5000/get_image'
     
     try:
@@ -44,131 +45,203 @@ def request_image_from_flask(prompt):
 class ImageViewSet(GenericViewSet,
                      mixins.CreateModelMixin,
                      mixins.ListModelMixin,
-                     mixins.DestroyModelMixin,
-                     mixins.UpdateModelMixin):
-
-    permission_classes = [IsAuthenticated]
-    serializer_class = ImageAdminSerializer
-    queryset = Image.objects.all()
-
-    def filter_queryset(self,queryset):
-        queryset = queryset.filter(diary__user=self.request.user)
-        return super().filter_queryset(queryset)
-    
-    def create(self, request, *args, **kwargs):
-        try:
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            
-            diary = serializer.validated_data.get('diary')
-            image_prompt = get_prompt(diary.content)[0]
-            print(image_prompt)
-            
-            image_url = request_image_from_flask(image_prompt)
-            print('img: ',image_url)
-            if not image_url:
-                return Response({'error': "Failed to get image from Flask"}, status=status.HTTP_400_BAD_REQUEST)
-                
-            existing_image = Image.objects.filter(diary=diary).first()
-                
-            if existing_image:
-                # 이미지가 존재하면 해당 이미지를 수정
-                print('ex')
-                existing_image.image = image_url
-                existing_image.save()
-                return Response({"message": "Image updated successfully"}, status=status.HTTP_200_OK)
-                
-            else:
-                # 이미지가 존재하지 않으면 새로운 이미지를 생성
-                print('save')
-                new_image = Image.objects.get_or_create(diary=diary, image_url=image_url, image_prompt=image_prompt)
-                return Response({"message": "Image uploaded successfully"}, status=status.HTTP_201_CREATED)
-
-        except Exception as e:
-            return Response({'error': f"Error uploading image: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-    # 이미지 삭제 기능
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    # 이미지 업데이트 기능
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
-    
-    
-class ImageAdminViewSet(GenericViewSet,
-                     mixins.CreateModelMixin,
-                     mixins.ListModelMixin,
                      mixins.RetrieveModelMixin,
                      mixins.DestroyModelMixin,
                      mixins.UpdateModelMixin):
-
-    permission_classes = [IsAdminUser]
-    serializer_class = ImageAdminSerializer
+    '''
+    
+    ---
+    
+    '''
+    permission_classes = [IsAuthenticated]
+    serializer_class = ImageSerializer
     queryset = Image.objects.all()
     
+    def filter_queryset(self,queryset):
+        queryset = queryset.filter(diary__user=self.request.user)
+        return super().filter_queryset(queryset)
+
+
     def create(self, request, *args, **kwargs):
+        
+        '''
+        이미지 생성 API
+        
+        ---
+        
+        ### 응답에 최대 40초 소요 가능 
+        ## 예시 request:
+        
+            {
+                'diary' : 1
+            }
+            
+        ## 예시 response:
+        
+            201
+            {
+                  "id": 70,
+                    "created_at": "2024-05-02T13:04:10.208658+09:00",
+                    "image_url": "https://버킷주소/images/826cb58e-46a3-41fc-9699-bc2eccdc1355.jpg",
+                    "image_prompt": "(masterpiece,detailed), (Oil Painting:1.3), (Impressionism:1.3) ,(oil painting with brush strokes:1.2), (looking away:1.1), a girl in a traditional Korean hanbok, cherry blossom background, soft pastel colors, Korean artist reference, (ethereal:1.2), (delicate details:1.3), (dreamy atmosphere:1.25)",
+                    "diary": 1
+            }
+            400
+            {
+                'error': "Failed to get image from Flask" 이 경우 AI 서버가 꺼져있을때임
+            }
+            400
+            {
+                'error': "Error uploading image: {str(e)}"
+            }
+            401 unauthorized
+            403 CSRF token missing
+        '''
+
         try:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             
             diary = serializer.validated_data.get('diary')
             image_prompt = get_prompt(diary.content)[0]
-            print(image_prompt)
+            image_url = request_image_from_flask(image_prompt)
             
+            if not image_url:
+                return Response({'error': "Failed to get image from Flask"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            new_image = Image.objects.get_or_create(diary=diary, image_url=image_url, image_prompt=image_prompt)
+            serializer.validated_data['diary'] = diary
+            serializer.validated_data['image_url'] = image_url
+            serializer.validated_data['image_prompt'] = image_prompt
+            serializer.save()
+            
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        except Exception as e:
+                return Response({'error': f"Error uploading image: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def update(self, request, *args, **kwargs):
+        
+        '''
+        이미지 업데이트(재생성) API
+        
+        ---
+         
+        ### 응답에 최대 40초 소요 가능 
+        
+        ### id : 이미지의 id
+
+        ## 예시 response:
+        
+            201
+            {
+                "id": 이미지의 ID,
+                "created_at": "생성 날짜",
+                "image_url": "s3에 저장된 이미지 url",
+                "image_prompt": "이미지 생성 프롬프트",
+                "diary": 일기의 ID
+            }
+            401 unauthorized
+            400
+            {
+                'error': "Failed to get image from Flask" 이 경우 AI 서버가 꺼져있을때임
+            }
+            400
+            {
+                'error': "Error uploading image: {str(e)}" 
+            }
+        '''
+
+        try:
+            partial = kwargs.pop('partial', True)
+            instance = self.get_object()
+            image_prompt = get_prompt(instance.diary.content)[0]
+            print(image_prompt)
+                
             image_url = request_image_from_flask(image_prompt)
             print('img: ',image_url)
             if not image_url:
                 return Response({'error': "Failed to get image from Flask"}, status=status.HTTP_400_BAD_REQUEST)
-                
-            existing_image = Image.objects.filter(diary=diary).first()
-                
-            if existing_image:
-                # 이미지가 존재하면 해당 이미지를 수정
-                print('ex')
-                existing_image.image = image_url
-                existing_image.save()
-                return Response({"message": "Image updated successfully"}, status=status.HTTP_200_OK)
-                
-            else:
-                # 이미지가 존재하지 않으면 새로운 이미지를 생성
-                print('save')
-                new_image = Image.objects.get_or_create(diary=diary, image_url=image_url, image_prompt=image_prompt)
-                return Response({"message": "Image uploaded successfully"}, status=status.HTTP_201_CREATED)
 
+            instance.image = image_url
+            instance.save()
+            
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+                
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Http404:
+            return Response({'error': "Image not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return Response({'error': f"Error uploading image: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': f"Error updating image: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
         
-        # 이미지 목록 조회 기능
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
 
-    # 이미지 삭제 기능
+    def retrieve(self, request, *args, **kwargs):
+        '''
+        이미지 ID로 이미지를 조회하는 API
+        
+        ---
+        
+        ## 예시 response
+            201
+                {
+                    "id": 70,
+                        "created_at": "2024-05-02T13:04:10.208658+09:00",
+                        "image_url": "https://버킷주소/images/826cb58e-46a3-41fc-9699-bc2eccdc1355.jpg",
+                        "image_prompt": "(masterpiece,detailed), (Oil Painting:1.3), (Impressionism:1.3) ,(oil painting with brush strokes:1.2), (looking away:1.1), a girl in a traditional Korean hanbok, cherry blossom background, soft pastel colors, Korean artist reference, (ethereal:1.2), (delicate details:1.3), (dreamy atmosphere:1.25)",
+                        "diary": 1
+                }
+            
+        '''
+        return super().retrieve(request, *args, **kwargs)
+    
+    def partial_update(self, request, *args, **kwargs):
+        '''
+        이미지 업데이트(재생성) API (==update)
+        
+        ---
+         
+        ### 응답에 최대 40초 소요 가능 
+        
+        ### id : 이미지의 id
+
+        ## 예시 response:
+        
+            201
+            {
+                "id": 이미지의 ID,
+                "created_at": "생성 날짜",
+                "image_url": "s3에 저장된 이미지 url",
+                "image_prompt": "이미지 생성 프롬프트",
+                "diary": 일기의 ID
+            }
+            401 unauthorized
+            400
+            {
+                'error': "Failed to get image from Flask"
+            }
+            400
+            {
+                'error': "Error uploading image: {str(e)}"
+            }
+        '''
+        return super().partial_update(request, *args, **kwargs)
+    
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    # 이미지 업데이트 기능
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
+        '''
+        이미지를 삭제하는 API
+        
+        ---
+        '''
+        return super().destroy(request, *args, **kwargs)
+    
+    def list(self, request, *args, **kwargs):
+        '''
+        이미지 목록을 조회하는 API
+        
+        ---
+        
+        '''
+        return super().list(request, *args, **kwargs)

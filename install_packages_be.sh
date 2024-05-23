@@ -1,0 +1,15 @@
+pip install django
+pip install djangorestframework
+pip install python-decouple
+pip install django-storages
+pip install boto3
+pip install django-rest-auth
+pip install django-allauth
+pip install django-environ 
+pip install pytorch-lightning
+pip install 'openai==0.28.1'
+pip install 'drf-yasg==1.21.7'
+pip install mysqlclient
+pip install djangorestframework-simplejwt
+pip install django-cors-headers
+pip install flex

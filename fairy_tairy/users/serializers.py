@@ -6,32 +6,22 @@ from rest_framework import serializers
 
 
 class FollowSerializer(serializers.ModelSerializer):
+    follower_username = serializers.SerializerMethodField()
+    following_user_username = serializers.SerializerMethodField()
+
     class Meta:
         model = Follow
-        fields = '__all__'
+        fields = ['id', 'follower', 'following_user', 'status', 'follower_username', 'following_user_username']
 
-# class UserSerializer(serializers.ModelSerializer):
+    def get_follower_username(self, obj):
+        return obj.follower.username if obj.follower else None
 
-#     class Meta:
-#         model = User
-#         fields = '__all__'
-#         exclude = ['password','id']
+    def get_following_user_username(self, obj):
+        return obj.following_user.username if obj.following_user else None
+    
+    
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id','username']
 
-
-# # 프로필
-# class ProfileSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['username', 'password', 'email', 'first_name', 'last_name']
-#         read_only_fields =['username', 'email']
-        
-#     def update(self, instance, validated_data):
-#         instance.first_name = validated_data.get('first_name', instance.first_name)
-#         instance.last_name = validated_data.get('last_name', instance.last_name)
-        
-#         password = validated_data.get('password', None)
-#         if password is not None:
-#             instance.set_password(password)
-
-#         instance.save()
-#         return instance

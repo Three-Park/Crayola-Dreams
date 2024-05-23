@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from storages.backends.s3boto3 import S3Boto3Storage
 import datetime
+from datetime import timedelta
 import environ
 from pathlib import Path
 import os
@@ -32,7 +33,7 @@ OPENAI_API_KEY = env('OPENAI_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 FLASK_URL=env('FLASK_URL')
 
 # Application definition
@@ -59,7 +60,9 @@ INSTALLED_APPS = [
     
     #DRF Authentication
     'rest_framework.authtoken',
+    
     # 'rest_framework_simplejwt',
+    'rest_framework_simplejwt',
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'django.contrib.sites',
@@ -75,6 +78,10 @@ INSTALLED_APPS = [
     #drf_yasg
     'drf_yasg',
     
+    'corsheaders',
+    #ssl인증서
+    'sslserver',
+
     # crispy for filtering, search, sort
     # 'crispy_forms',
     
@@ -82,6 +89,20 @@ INSTALLED_APPS = [
     # 'django-nose',
 ]
 
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'BearerAuth': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': "JWT Token"
+        }
+    },
+    'SECURITY_REQUIREMENTS': [{
+        'BearerAuth': []
+    }]
+}
 
 #Site설정
 SITE_ID = 1
@@ -102,27 +123,23 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         # "rest_framework.authentication.SessionAuthentication",
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
-    # 'DEFAULT_FILTER_BACKENDS':[
-    #     'rest_framework.filters.DjangoFilterBackend',
-    #     'rest_framework.filters.SearchFilter',
-    #     'rest_framework.filters.OrderingFilter',
-    # ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': 10
     
 }
 
 REST_AUTH = {
     'USE_JWT': True,
-    'JWT_AUTH_COOKIE': 'my-app-auth',
+    'JWT_AUTH_COOKIE': 'access_token',
     
     # want refresh token
-    'JWT_AUTH_REFRESH_COOKIE': 'my-refresh-token',
+    'JWT_AUTH_REFRESH_COOKIE': 'refresh_token',
     # set refresh token http only (security essue)
     'JWT_AUTH_HTTPONLY': False,
     # JWT 쿠키 csrf 검사
@@ -138,16 +155,13 @@ JWT_AUTH = {
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),
 }
 
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-    'rest_framework.authentication.BasicAuthentication',
-    'rest_framework.authentication.TokenAuthentication',
-]
-
+SIMPLE_JWT = {
+   "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+   "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -155,7 +169,37 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware',
+]
+CORS_ORIGIN_ALLOW_ALL=True 
+CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:8080',
+#     'http://localhost:3000',
+#     'http://localhost:3001',
+#     'http://localhost:8081', 
+#     'http://43.202.125.125:8000',
+#     'http://43.202.125.125:8001',# 클라이언트의 주소로 변경해야 합니다.
+#     'http://*'
+# ]
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
 ]
 
 ROOT_URLCONF = 'fairy_tairy.urls'
